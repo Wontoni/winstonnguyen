@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Wontoni/winstonnguyen/issues"
   },
-  "homepage": "https://github.com/Wontoni/winstonnguyen#readme"
+  "homepage": "https://github.com/Wontoni/winstonnguyen#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
