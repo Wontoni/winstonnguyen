@@ -9,22 +9,26 @@ class Note {
 let notesArr = [];
 
 document.addEventListener('DOMContentLoaded', function() {
-    let noteForm = document.getElementById("noteForm");
+    if(typeof(Storage) !== "undefined") {
+        let noteForm = document.getElementById("noteForm");
 
-    noteForm.addEventListener("submit", (e) => {
-        e.preventDefault();
-        createNote();
-    });
-
-    notesArr = JSON.parse(localStorage.getItem("notes") || "[]");
-
-    populateNotes();
-
-    // Add note object to local storage -> Text + DateTime
-    saveNotes(); // Call once at page load and then every 2 seconds after.
-    const interval = setInterval(function() {
-        saveNotes();
-    }, 2000);
+        noteForm.addEventListener("submit", (e) => {
+            e.preventDefault();
+            createNote();
+        });
+    
+        notesArr = JSON.parse(localStorage.getItem("notes") || "[]");
+    
+        populateNotes();
+    
+        // Add note object to local storage -> Text + DateTime
+        saveNotes(); // Call once at page load and then every 2 seconds after.
+        const interval = setInterval(function() {
+            saveNotes();
+        }, 2000);
+    } else {
+        alert("Local Storage is not supported on this browser.");
+    }
     
 }, false);
 

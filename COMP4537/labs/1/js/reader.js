@@ -1,16 +1,20 @@
 let notesArr = [];
 
 document.addEventListener('DOMContentLoaded', function() {
-    notesArr = JSON.parse(localStorage.getItem("notes") || "[]");
-
-
-    // Get note objects from local storage
-    retrieveNotes();
-    const interval = setInterval(function() {
-        retrieveNotes();
-    }, 2000);
-
     // populateNotes();
+
+    if(typeof(Storage) !== "undefined") {
+        notesArr = JSON.parse(localStorage.getItem("notes") || "[]");
+
+
+        // Get note objects from local storage
+        retrieveNotes();
+        const interval = setInterval(function() {
+            retrieveNotes();
+        }, 2000);
+    } else {
+        alert("Local Storage is not supported on this browser.");
+    }
     
 }, false);
 
