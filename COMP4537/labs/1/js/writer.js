@@ -2,7 +2,6 @@
 class Note {
     constructor(noteText, dateTime) {
         this.noteText = noteText;
-        this.dateTime = dateTime;
     }
 }
 
@@ -39,7 +38,7 @@ function createNote() {
 
     if (note.value != "") {
         // Create note object
-        let newNote = new Note(note.value, Date.now());
+        let newNote = new Note(note.value);
         notesArr.push(newNote);
 
         // DOM new note card here
