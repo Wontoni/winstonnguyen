@@ -1,0 +1,23 @@
+* {
+    padding: 5px;
+}
+
+.header {
+    text-align: end;
+}
+
+.content {
+    text-align: center;
+}
+
+.noteCard {
+    vertical-align: middle;
+}
+
+.noteText {
+    display: inline-block;
+    border: 1px solid black;
+    width: 300px;
+    padding: 10px;
+    margin: 10px;
+}

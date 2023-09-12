@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="./css/index.css">
+
+    <script src="./js/writer.js"></script>
+    <title>Writer</title>
+</head>
+<body>
+    <div class="header">
+        Stored at:
+        <span id="updated">00:00:00 AM</span>
+    </div>
+    
+    <div class="content">
+        <div class="notes" id="notes">
+        </div>
+        <div class="createNote">
+            <form action="" onsubmit="return false" id="noteForm">
+                <input type="text" placeholder="Add Note..." id="formText">
+                <input type="submit" value="Add" onclick="createNote()">
+            </form>
+        </div>
+        <a href="index.html">Back to Index</a>
+    </div>
+</body>
+</html>
