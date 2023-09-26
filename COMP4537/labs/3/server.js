@@ -10,7 +10,7 @@ http.createServer(function (req, res) {
     if(q.pathname == "/") {
         res.end("you're boring")
     }
-    else if(q.pathname == "/getDate/") {
+    else if(q.pathname == "/COMP4537/labs/3/getDate/") {
         res.end(utils.getDate(q.query["name"]));
     }
 }).listen(8080);
