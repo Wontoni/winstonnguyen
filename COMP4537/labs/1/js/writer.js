@@ -1,6 +1,6 @@
 // Note Object
 class Note {
-    constructor(noteText, dateTime) {
+    constructor(noteText) {
         this.noteText = noteText;
     }
 }
