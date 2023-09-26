@@ -13,7 +13,7 @@ http.createServer(function (req, res) {
     else if(q.pathname == "/getDate/") {
         res.end(utils.getDate(q.query["name"]));
     }
-}).listen(8888);
+}).listen(8080);
 
 
 console.log('Server is running and listening');
