@@ -9,10 +9,11 @@ http.createServer(function (req, res) {
 
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
-        res.end("This is the root")
+        res.end()
     }
     else if(q.pathname == "/COMP4537/labs/3/getDate/") {
-        res.end(utils.getDate(q.query["name"]));
+        let text = utils.getDate(q.query["name"]);
+        res.end(`<div style=color:blue>` + text + `</div>`)
     } else {
         res.end("Page not found")
     }
