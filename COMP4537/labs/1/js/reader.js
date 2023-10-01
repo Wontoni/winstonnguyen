@@ -31,7 +31,7 @@ function retrieveNotes() {
 }
 
 
-function createNoteCard(noteText, cardNumber) {
+function createNoteCard(noteText,) {
     let noteCard = document.createElement("div");
     noteCard.className = "noteCard";
 
@@ -56,7 +56,7 @@ function populateNotes() {
     // Create a card for each item in the array
     for (let i = 0; i < notesArr.length; i++) {
         // Create noteCard div
-        let noteCard = createNoteCard(notesArr[i].noteText, i);
+        let noteCard = createNoteCard(notesArr[i].noteText);
 
         notesDiv.appendChild(noteCard);
     }
