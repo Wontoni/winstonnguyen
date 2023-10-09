@@ -60,6 +60,7 @@ http.createServer(function (req, res) {
 
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
+        console.log("GOT ROOT");
         res.end("HOMEPAGE")
     }
     else if(q.pathname == "/COMP4537/labs/3/getDate/") {
@@ -141,6 +142,10 @@ http.createServer(function (req, res) {
                 );
             }
         });
+    } else {
+        console.log("URL: " + req.url);
+        console.log("METHOD: " + req.method);
+        res.end("PAGE NOT FOUND");
     }
     // else {
     //     res.end("Page not found")
