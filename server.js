@@ -56,6 +56,8 @@ http.createServer(function (req, res) {
         "Access-Control-Allow-Methods": "*",
     });
 
+    const labFourApiRoute = "/COMP4537/labs/4/API/v1/";
+
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
         res.end("HOMEPAGE")
@@ -64,7 +66,7 @@ http.createServer(function (req, res) {
         let text = utils.getDate(q.query["name"]);
         res.end(`<div style=color:blue>` + text + `</div>`)
     } 
-    else if (req.method === GET && req.url === endPointRoot) {
+    else if (req.method === GET && req.url === labFourApiRoute) {
         console.log("GET");
         console.log("Words in Dictionary:");
         for (let i = 0; i < dictionary.length; i++) {
@@ -92,7 +94,7 @@ http.createServer(function (req, res) {
             );
         }
     } 
-    else if (req.method === POST && req.url === endPointRoot) {
+    else if (req.method === POST && req.url === labFourApiRoute) {
         console.log("POST");
         let body = "";
 

@@ -3,11 +3,8 @@ const url = require("url");
 const GET = "GET";
 const POST = "POST";
 
-const endPointRoot = "/API/v1/";
-
 let requestCount = 0;
 let dictionary = [
-	// { word: "word", definition: "DEFINTION" },
 ];
 
 function addDefinition(word, definition) {
@@ -55,6 +52,8 @@ http.createServer(function (req, res) {
 			"Access-Control-Allow-Origin": "*",
 			"Access-Control-Allow-Methods": "*",
 		});
+
+		const endPointRoot = "/COMP4537/labs/4/API/v1/";
 
 		if (req.method === GET && req.url === endPointRoot) {
 			console.log("GET");
