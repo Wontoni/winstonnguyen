@@ -67,7 +67,7 @@ http.createServer(function (req, res) {
         let text = utils.getDate(q.query["name"]);
         res.end(`<div style=color:blue>` + text + `</div>`)
     } 
-    else if (req.method === GET && req.url === labFourApiRoute) {
+    else if (req.method === GET && q.pathname === labFourApiRoute) {
         console.log("GET");
         console.log("Words in Dictionary:");
         for (let i = 0; i < dictionary.length; i++) {
@@ -144,6 +144,7 @@ http.createServer(function (req, res) {
         });
     } else {
         console.log("URL: " + req.url);
+        console.log("PATHNAME: " + q.pathname);
         console.log("METHOD: " + req.method);
         res.end("PAGE NOT FOUND");
     }
