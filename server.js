@@ -171,39 +171,41 @@ http.createServer(async function (req, res) {
             }
         });
     } 
-    else if (q.pathname == "/COMP4537/labs/5/index/") {
-        fs.readFile('./COMP4537/Labs/5/index.html', function(error, html) {
-            if (error) {
-                throw error
-            }
-            res.write(html)
-            res.end()
-        })
+    else if (q.pathname == "/COMP4537/labs/5/index.html") {
+    fs.readFile("./COMP4537/labs/5/index.html", function (error, html) {
+        if (error) {
+            throw error;
+        }
+        res.write(html);
+        res.end();
+    });
     } 
-    else if (req.method === POST && q.pathname === "/COMP4537/labs/5/API/v1/sql/addRows/") 
-    {
+    else if (req.method === POST && q.pathname === labFiveApiRoute + "addRows/") {
         // http://localhost:8080/COMP4537/labs/5/API/v1/sql/addRows/
         console.log("ADD ROWS");
         const success = db_queries.addPatients();
 
-        if(success) {
+        if (success) {
             console.log("Successfully added patients");
             res.end("Succesfully added patients");
         } else {
             console.log(success);
             res.end(success);
-            res.end("Error adding patients")
+            res.end("Error adding patients");
         }
     } 
     else if (req.method === GET && q.pathname === labFiveApiRoute) {
-        let query = q.query["query"];
+        let query = "" + q.query["query"];
+        console.log("server side query recevied is: " + query);
+
         let result = await db_queries.labFiveQuery(query);
-        if(result) {
-            res.end(result)
+        if (result) {
+            console.log(result);
+            res.end(JSON.stringify(result));
         } else {
-            res.end("Error in running select query")   
+            res.end("Error in running select query");
         }
-    }
+    } 
     else if (req.method === POST && q.pathname === labFiveApiRoute) {
         let body = "";
 
@@ -218,26 +220,22 @@ http.createServer(async function (req, res) {
 
             let result = await db_queries.labFiveQuery(q.query.query);
             if (result) {
-                res.end(
-                    "Succesfully inserted values into the database"
-                );
+                res.end("Succesfully inserted values into the database");
             } else {
                 res.end(result);
             }
         });
-
-    }
-
+    } 
     else {
         console.log("URL: " + req.url);
         console.log("PATHNAME: " + q.pathname);
         console.log("METHOD: " + req.method);
         res.end("PAGE NOT FOUND");
     }
-}).listen(port);
+    })
+    .listen(port);
 
 console.log("Application listening on port " + port);
-
 
 
 
