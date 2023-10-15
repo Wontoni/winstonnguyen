@@ -55,7 +55,7 @@ function inputCheck(word) {
 	}
 }
 
-http.createServer(function (req, res) {
+http.createServer(async function (req, res) {
     res.writeHead(200, {
         "Content-Type": "text/html",
         "Access-Control-Allow-Origin": "*",
@@ -171,9 +171,6 @@ http.createServer(function (req, res) {
             }
         });
     } 
-    else if (req.method === GET && q.pathname === labFiveApiRoute) {
-
-    } 
     else if (q.pathname == "/COMP4537/labs/5/index/") {
         fs.readFile('./COMP4537/Labs/5/index.html', function(error, html) {
             if (error) {
@@ -183,7 +180,8 @@ http.createServer(function (req, res) {
             res.end()
         })
     } 
-    else if (req.method === POST && q.pathname === "/COMP4537/labs/5/API/v1/sql/addRows/") {
+    else if (req.method === POST && q.pathname === "/COMP4537/labs/5/API/v1/sql/addRows/") 
+    {
         // http://localhost:8080/COMP4537/labs/5/API/v1/sql/addRows/
         console.log("ADD ROWS");
         const success = db_queries.addPatients();
@@ -197,9 +195,39 @@ http.createServer(function (req, res) {
             res.end("Error adding patients")
         }
     } 
-    else if (req.method === GET && q.pathname === "/COMP4537/labs/5/API/v1/sql/addRows/") {
-        res.end("THIS IS A GET");
+    else if (req.method === GET && q.pathname === labFiveApiRoute) {
+        let query = q.query["query"];
+        let result = await db_queries.labFiveQuery(query);
+        if(result) {
+            res.end(result)
+        } else {
+            res.end("Error in running select query")   
+        }
     }
+    else if (req.method === POST && q.pathname === labFiveApiRoute) {
+        let body = "";
+
+        req.on("data", function (chunk) {
+            if (chunk != null) {
+                body += chunk;
+            }
+        });
+
+        req.on("end", async function () {
+            let q = url.parse(body, true);
+
+            let result = await db_queries.labFiveQuery(q.query.query);
+            if (result) {
+                res.end(
+                    "Succesfully inserted values into the database"
+                );
+            } else {
+                res.end(result);
+            }
+        });
+
+    }
+
     else {
         console.log("URL: " + req.url);
         console.log("PATHNAME: " + q.pathname);

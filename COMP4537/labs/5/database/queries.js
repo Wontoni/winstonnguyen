@@ -37,8 +37,19 @@ async function addPatients() {
 	}
 }
 
+async function labFiveQuery(query) {
+    try {
+        const result = await database.query(query);
+
+        return result;
+    } 
+    catch(err) {
+        console.log("Error running lab five query");
+        console.log(err);
+        return false;
+    }
+}
 
 
 
-
-module.exports = {addPatients};
+module.exports = {addPatients, labFiveQuery};
