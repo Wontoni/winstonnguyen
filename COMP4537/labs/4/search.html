@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+</head>
+<body>
+    <h1>SEARCH</h1>
+
+    <div>
+        <label>Word</label>
+        <input type="text" id="word"> <br><br>
+        <button type="submit" onclick="searchDefinition()">Search</button><br><br>
+        <label><h3>Definition</h3></label>
+        <div id="searchResult"">Please search to find a definition!</div>
+    </div>
+    <br><br>
+    <a href="store.html"><button type="button">Go to storage page</button></a>
+
+    <script>
+        const endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/4/API/v1/";
+
+        function searchDefinition() {
+            let word = document.getElementById("word").value;
+            let params = "?word=" + word;
+            let url = endPointRoot + params;
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("GET", url, true);
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    document.getElementById("searchResult").innerHTML = this.responseText;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

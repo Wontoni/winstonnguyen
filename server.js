@@ -1,13 +1,16 @@
 const http = require('http');
 const url = require('url');
 const fs = require('fs')
-const port = 8080;
+const port = 3000;
 const GET = "GET";
 const POST = "POST";
 
 const utils = require('./COMP4537/labs/3/modules/utils')
 
-const database = require('./COMP4537/labs/5/databaseConnection');
+const database = require('./COMP4537/labs/5/database/databaseConnection');
+const db_utils = require('./COMP4537/labs/5/database/db_utils');
+const db_queries = require('./COMP4537/labs/5/database/queries.js');
+db_utils.printMySQLVersion();
 
 let requestCount = 0;
 let dictionary = [
@@ -179,6 +182,23 @@ http.createServer(function (req, res) {
             res.write(html)
             res.end()
         })
+    } 
+    else if (req.method === POST && q.pathname === "/COMP4537/labs/5/API/v1/sql/addRows/") {
+        // http://localhost:8080/COMP4537/labs/5/API/v1/sql/addRows/
+        console.log("ADD ROWS");
+        const success = db_queries.addPatients();
+
+        if(success) {
+            console.log("Successfully added patients");
+            res.end("Succesfully added patients");
+        } else {
+            console.log(success);
+            res.end(success);
+            res.end("Error adding patients")
+        }
+    } 
+    else if (req.method === GET && q.pathname === "/COMP4537/labs/5/API/v1/sql/addRows/") {
+        res.end("THIS IS A GET");
     }
     else {
         console.log("URL: " + req.url);

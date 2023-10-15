@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store</title>
+</head>
+<body>
+    <h1>STORE</h1>
+
+    <div>
+        <label>Word &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+        <input type="text" id="word"> <br><br>
+        <label>Definition</label>
+        <textarea id="definition"></textarea> <br><br>
+        <button type="submit" onclick="addDefinition()">Add Definition</button>
+    </div>
+    <div id="addResult"></div>
+    <br><br>
+    <a href="search.html"><button type="button">Go to search page</button></a>
+
+    <script>
+        const endPointRoot = "https://www.winstonnguyen.ca/COMP4537/labs/4/API/v1/";
+
+        function addDefinition() {
+
+            let word = document.getElementById("word").value;
+            let definition = document.getElementById("definition").value;
+            let params = "?word=" + word + "&definition=" + definition;
+            const xhttp = new XMLHttpRequest();
+            xhttp.open("POST", endPointRoot, true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send(params);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    document.getElementById("addResult").innerHTML = this.responseText;
+                    document.getElementById("word").value = "";
+                    document.getElementById("definition").value = "";
+                }
+            }
+        }
+    </script>
+</body>
+</html>

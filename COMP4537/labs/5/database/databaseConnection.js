@@ -6,8 +6,6 @@ const dbConfig = {
 	user: "root",
 	password: "Wontonious098123",
 	database: "comp4537",
-	multipleStatements: false,
-	namedPlaceholders: true
 };
 
 
