@@ -1,10 +1,13 @@
 const http = require('http');
 const url = require('url');
+const fs = require('fs')
 const port = 8080;
 const GET = "GET";
 const POST = "POST";
 
 const utils = require('./COMP4537/labs/3/modules/utils')
+
+const database = require('./COMP4537/labs/5/databaseConnection');
 
 let requestCount = 0;
 let dictionary = [
@@ -57,19 +60,44 @@ http.createServer(function (req, res) {
     });
 
     const labFourApiRoute = "/COMP4537/labs/4/API/v1/";
+    const labFiveApiRoute = "/COMP4537/labs/5/API/v1/sql/";
 
     let q = url.parse(req.url, true);
     if(q.pathname == "/") {
-        console.log("GOT ROOT");
         res.end("HOMEPAGE")
     }
     else if(q.pathname == "/COMP4537/labs/3/getDate/") {
         let text = utils.getDate(q.query["name"]);
         res.end(`<div style=color:blue>` + text + `</div>`)
-    } 
+    }  
+    else if (q.pathname == "/COMP4537/labs/4/search.html"){
+        fs.readFile('./COMP4537/Labs/4/search.html', function(error, html) {
+            if (error) {
+                throw error
+            }
+            res.write(html)
+            res.end()
+        })
+    }  
+    else if (q.pathname == "/COMP4537/labs/4/store.html"){
+        fs.readFile('./COMP4537/Labs/4/store.html', function(error, html) {
+            if (error) {
+                throw error
+            }
+            res.write(html)
+            res.end()
+        })
+    }  
+    else if (q.pathname == "/COMP4537/labs/4/index.html"){
+        fs.readFile('./COMP4537/Labs/4/index.html', function(error, html) {
+            if (error) {
+                throw error
+            }
+            res.write(html)
+            res.end()
+        })
+    }
     else if (req.method === GET && q.pathname === labFourApiRoute) {
-        console.log("GET");
-        console.log("Words in Dictionary:");
         for (let i = 0; i < dictionary.length; i++) {
             console.log(
                 "Word: " +
@@ -78,8 +106,6 @@ http.createServer(function (req, res) {
                     dictionary[i].definition
             );
         }
-
-        const q = url.parse(req.url, true);
 
         // Search for word in dictionary. Sends an appropriate response
         let result = searchDefinition(q.query["word"]);
@@ -96,7 +122,6 @@ http.createServer(function (req, res) {
         }
     } 
     else if (req.method === POST && req.url === labFourApiRoute) {
-        console.log("POST");
         let body = "";
 
         req.on("data", function (chunk) {
@@ -142,15 +167,25 @@ http.createServer(function (req, res) {
                 );
             }
         });
-    } else {
+    } 
+    else if (req.method === GET && q.pathname === labFiveApiRoute) {
+
+    } 
+    else if (q.pathname == "/COMP4537/labs/5/index/") {
+        fs.readFile('./COMP4537/Labs/5/index.html', function(error, html) {
+            if (error) {
+                throw error
+            }
+            res.write(html)
+            res.end()
+        })
+    }
+    else {
         console.log("URL: " + req.url);
         console.log("PATHNAME: " + q.pathname);
         console.log("METHOD: " + req.method);
         res.end("PAGE NOT FOUND");
     }
-    // else {
-    //     res.end("Page not found")
-    // }
 }).listen(port);
 
 console.log("Application listening on port " + port);
