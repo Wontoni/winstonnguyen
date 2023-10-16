@@ -2,7 +2,7 @@ const database = require('./databaseConnection');
 
 async function addPatients() {
 	let createUserSQL = `
-        INSERT INTO comp4537.patient (
+        INSERT INTO patient (
             name,
             date_of_birth
         )
@@ -41,12 +41,12 @@ async function labFiveQuery(query) {
     try {
         const result = await database.query(query);
 
-        return result;
+        return {success: true, result: result};
     } 
     catch(err) {
         console.log("Error running lab five query");
         console.log(err);
-        return false;
+        return {success: false, result:err};
     }
 }
 
