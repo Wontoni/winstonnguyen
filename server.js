@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-const fs = require('fs')
+const fs = require('fs');
 const port = 3000;
 const GET = "GET";
 const POST = "POST";
