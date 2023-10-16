@@ -2,7 +2,7 @@ const database = require("./databaseConnection");
 
 async function createTables() {
 	let createUserSQL = `
-		CREATE TABLE IF NOT EXISTS comp4537.patient (
+		CREATE TABLE IF NOT EXISTS patient (
   		patientid INT NOT NULL AUTO_INCREMENT,
   		name VARCHAR(100) NOT NULL,
   		dateOfBirth DATETIME NOT NULL,
