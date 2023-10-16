@@ -4,7 +4,7 @@ async function addPatients() {
 	let createUserSQL = `
         INSERT INTO patient (
             name,
-            date_of_birth
+            dateOfBirth
         )
         VALUES
             (
