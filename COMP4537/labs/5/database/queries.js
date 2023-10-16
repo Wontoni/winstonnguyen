@@ -40,6 +40,7 @@ async function addPatients() {
 async function labFiveQuery(query) {
     try {
         const result = await database.query(query);
+        console.log(result);
 
         return {success: true, result: result};
     } 

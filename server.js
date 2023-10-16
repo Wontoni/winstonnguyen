@@ -1,7 +1,7 @@
 const http = require('http');
 const url = require('url');
 const fs = require('fs');
-const port = 8080;
+const port = 3000;
 const GET = "GET";
 const POST = "POST";
 
@@ -219,10 +219,11 @@ http.createServer(async function (req, res) {
             let q = url.parse(body, true);
 
             let result = await db_queries.labFiveQuery(q.query.query);
-            if (result) {
+            if (result.success) {
+                console.log(result);
                 res.end("Succesfully inserted values into the database");
             } else {
-                res.end(result);
+                res.end(result.result.sqlMessage);
             }
         });
     } 
