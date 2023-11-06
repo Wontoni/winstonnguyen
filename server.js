@@ -136,7 +136,7 @@ app.get('/COMP4537/labs/3/getDate/:name', (req, res) => {
     }
   });
 
-  app.get(dbLabSixStrings.labSixApiRoute + "definition/:word", async (req, res) => {
+  app.get(dbLabSixStrings.labSixApiRoute + "definition/", async (req, res) => {
       res.status(400);
       const returnJSON = {
         message: dbLabSixStrings.dbLabSixMissingInput + "word",
