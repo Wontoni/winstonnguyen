@@ -1,20 +1,195 @@
-const http = require('http');
-const url = require('url');
-const fs = require('fs');
-const port = 8080;
+require("dotenv").config();
+const express = require('express');
+const port = process.env.PORT || 8080;
 const GET = "GET";
 const POST = "POST";
 
 const utils = require('./COMP4537/labs/3/modules/utils')
 
-const database = require('./COMP4537/labs/5/database/databaseConnection');
-const db_utils = require('./COMP4537/labs/5/database/db_utils');
-const db_queries = require('./COMP4537/labs/5/database/queries.js');
+// Database Connection
+const database = require('./database/databaseConnection');
+const db_utils = require('./database/db_utils');
+
+// Lab 5 queries
+const db_lab_five_queries = require('./COMP4537/labs/5/database/queries.js');
+
+// Lab 6 queries
+const db_lab_six_queries = require('./COMP4537/labs/6/database/queries.js');
+
 db_utils.printMySQLVersion();
+
+// Strings
+const labFourApiRoute = "/COMP4537/labs/4/API/v1/";
+const labFiveApiRoute = "/COMP4537/labs/5/API/v1/sql/";
+const labSixApiRoute = "/COMP4537/labs/6/API/v1/";
+const labSixSearchError = 'Error in search query';
 
 let requestCount = 0;
 let dictionary = [
 ];
+
+const app = express();
+
+app.use(express.json());
+
+
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({extended: false}));
+
+app.use((req, res, next) => {
+    res.append('Access-Control-Allow-Origin', ['*']);
+    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
+    res.append('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+
+app.get('/', (req,res) => { 
+    res.sendFile(__dirname + "/index.html")
+}); 
+
+app.get('/COMP4537/labs/3/getDate/:name', (req, res) => {
+    const text = utils.getDate(req.params.name);
+    res.send(`<div style="color: blue">${text}</div>`);
+  });
+  
+  app.get('/COMP4537/labs/4/search', (req, res) => {
+    res.sendFile(__dirname + '/COMP4537/Labs/4/search.html');
+  });
+  
+  app.get('/COMP4537/labs/4/store', (req, res) => {
+    res.sendFile(__dirname + '/COMP4537/Labs/4/store.html');
+  });
+  
+  app.get('/COMP4537/labs/4/index', (req, res) => {
+    res.sendFile(__dirname + '/COMP4537/Labs/4/index.html');
+  });
+  
+  app.get(labFourApiRoute, (req, res) => {
+    for (let i = 0; i < dictionary.length; i++) {
+      console.log('Word: ' + dictionary[i].word + ' Definition: ' + dictionary[i].definition);
+    }
+  
+    let result = searchDefinition(req.params.word);
+    if (result) {
+      res.send('Request #' + requestCount + '<br><br>' + result);
+    } else {
+      res.send('Request #' + requestCount + "<br><br>The word '" + req.params.word + "' is not found!");
+    }
+  });
+  
+  app.post(labFourApiRoute, (req, res) => {
+    let hasWrongInput = inputCheck(req.body.word);
+    if (hasWrongInput) {
+      res.send('Request #' + requestCount + "<br><br>Unsuccessful: The entered word is either blank, empty, or has numbers in it!");
+      return;
+    }
+  
+    let result = addDefinition(req.body.word, req.body.definition);
+    if (result) {
+      res.send('Request #' + requestCount + ': (Total entries in your dictionary: ' + dictionary.length + ')<br><br>New entry recorded:<br><br>"' + req.body.word + ': ' + req.body.definition + '"');
+    } else {
+      res.send('Request #' + requestCount + "<br><br>Unsuccessful: The new word already exists in the dictionary!");
+    }
+  });
+  
+  app.get('/COMP4537/labs/5/index', (req, res) => {
+    res.sendFile(__dirname + '/COMP4537/labs/5/index.html');
+  });
+  
+  app.post(labFiveApiRoute + 'addRows/', (req, res) => {
+    console.log('ADD ROWS');
+    const success = db_lab_five_queries.addPatients();
+  
+    if (success) {
+      console.log('Successfully added patients');
+      res.send('Successfully added patients');
+    } else {
+      console.log(success);
+      res.send(success);
+      res.send('Error adding patients');
+    }
+  });
+  
+  app.get(labFiveApiRoute, async (req, res) => {
+    let query = '' + req.params.query;
+    console.log('server-side query received is: ' + query);
+  
+    let result = await db_lab_five_queries.labFiveQuery(query);
+    if (result) {
+      console.log(result);
+      res.json(result);
+    } else {
+      res.send('Error in running select query');
+    }
+  });
+  
+  app.post(labFiveApiRoute, async (req, res) => {
+    let result = await db_lab_five_queries.labFiveQuery(req.body.query);
+    if (result.success) {
+      console.log(result);
+      res.send('Successfully inserted values into the database');
+    } else {
+      res.send(result.result.sqlMessage);
+    }
+  });
+
+  app.get(labSixApiRoute + "definition/:word", async (req, res) => {
+    let result = await db_lab_six_queries.searchWord({word: req.params.word})
+    if (result) {
+        res.json(result);
+      } else {
+        const returnJson = {
+            error: "Entry Not Found",
+            message: `The word ${req.params.word} does not exist in the dictionary`,
+            entry: {
+                word: req.params.searchWord
+            },
+            total: 0 // TODO
+        }
+        // res.status(404);
+        res.send(returnJson);
+      }
+  })
+
+  app.post(labSixApiRoute + "definition/", async (req, res) => {
+    const definitionInsertJson = {
+        word: req.body.word,
+        definition: req.body.definition,
+        word_language: req.body.word_language,
+        definition_language: req.body.def_language
+    }
+
+    let result = await db_lab_six_queries.addDefinition(definitionInsertJson);
+    if (result) {
+        const returnJson =  {
+            "message": "Entry created successfully",
+            "entry": definitionInsertJson,
+            "total": 0 // TODO
+          }
+      res.send(returnJson);
+    } else {
+        const returnJson =  {
+            "error": "Word Conflict",
+            "message": `The word ${req.body.word} already exists.`,
+            "entry": definitionInsertJson,
+            "total": 0 // TODO
+          }
+      res.send(returnJson);
+    }
+  });
+  
+  app.get("*", (req, res) => {
+    console.log('URL: ' + req.url);
+    console.log('METHOD: ' + req.method);
+    res.send('PAGE NOT FOUND');
+  });
+  
+  app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
+  });
+
+
 
 function addDefinition(word, definition) {
 	requestCount++;
@@ -55,7 +230,8 @@ function inputCheck(word) {
 	}
 }
 
-http.createServer(async function (req, res) {
+ /* 
+ http.createServer(async function (req, res) {
     res.writeHead(200, {
         "Content-Type": "text/html",
         "Access-Control-Allow-Origin": "*",
@@ -183,7 +359,7 @@ http.createServer(async function (req, res) {
     else if (req.method === POST && q.pathname === labFiveApiRoute + "addRows/") {
         // http://localhost:8080/COMP4537/labs/5/API/v1/sql/addRows/
         console.log("ADD ROWS");
-        const success = db_queries.addPatients();
+        const success = db_lab_five_queries.addPatients();
 
         if (success) {
             console.log("Successfully added patients");
@@ -198,7 +374,7 @@ http.createServer(async function (req, res) {
         let query = "" + q.query["query"];
         console.log("server side query recevied is: " + query);
 
-        let result = await db_queries.labFiveQuery(query);
+        let result = await db_lab_five_queries.labFiveQuery(query);
         if (result) {
             console.log(result);
             res.end(JSON.stringify(result));
@@ -218,7 +394,7 @@ http.createServer(async function (req, res) {
         req.on("end", async function () {
             let q = url.parse(body, true);
 
-            let result = await db_queries.labFiveQuery(q.query.query);
+            let result = await db_lab_five_queries.labFiveQuery(q.query.query);
             if (result.success) {
                 console.log(result);
                 res.end("Succesfully inserted values into the database");
@@ -237,44 +413,4 @@ http.createServer(async function (req, res) {
     .listen(port);
 
 console.log("Application listening on port " + port);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// USING EXPRESS -> Switch later
-
-// const express = require('express');
-// const port = process.env.PORT || 8080;
-
-// const app = express();
-
-// app.use(express.urlencoded({extended: false}));
-
-
-// app.get('/', (req,res) => { // Homepage
-//     res.sendFile("index.html", { root: __dirname })
-// }); 
-
-
-// // app.get("*", (req,res) => { // 404 Catch All
-// // 	res.status(404);
-// // 	res.render("404")
-// // });
-
-// app.use(express.static(__dirname));
-
-// app.listen(port, () => {
-// 	console.log("Node application listening on port " + port);
-// }); 
+*/

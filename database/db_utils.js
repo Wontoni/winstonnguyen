@@ -31,7 +31,7 @@ async function printMySQLVersion() {
 		const results = await database.query(sqlQuery);
 		console.log("Successfully connected to MySQL");
 		console.log(results[0]);
-		createTables();
+		//createTables();
 		return true;
 	} catch (err) {
 		console.log("Error getting version from MySQL");

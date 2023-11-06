@@ -1,37 +1,39 @@
-const database = require('./databaseConnection');
+const database = require('../../../../database/databaseConnection');
 
-async function addPatients() {
+async function addDefinition(postData) {
 	let createUserSQL = `
-        INSERT INTO patient (
-            name,
-            dateOfBirth
-        )
+        INSERT INTO lab6_dictionary 
+        (word, defintion, word_langauge, definition_language)
         VALUES
-            (
-                'Sara Brown',
-                '1999-01-01'
-            ),
-            (
-                'John Smith',
-                '1941-01-01'
-            ),
-            (
-                'Jack Ma',
-                '1961-01-30'
-            ),
-            (
-                'Elon Musk',
-                '1999-01-01'
-            );
+        (:word , :defintion, :word_langauge, :definition_language);
 	`;
 	
 	try {
-		await database.query(createUserSQL);
+		await database.query(createUserSQL, postData);
 
 		return true;
 	}
 	catch(err) {
-		console.log("Error adding patients");
+		console.log("Error adding definition");
+        console.log(err);
+		return false;
+	}
+}
+
+async function searchWord(postData) {
+	let searchWordSql = `
+        SELECT word, defintion, word_langauge, definition_language
+        FROM lab6_dictionary
+        WHERE word = :word
+	`;
+	
+	try {
+		await database.query(searchWordSql, postData);
+
+		return true;
+	}
+	catch(err) {
+		console.log("Error searching word");
         console.log(err);
 		return false;
 	}
@@ -53,4 +55,4 @@ async function labFiveQuery(query) {
 
 
 
-module.exports = {addPatients, labFiveQuery};
+module.exports = {addDefinition, labFiveQuery};

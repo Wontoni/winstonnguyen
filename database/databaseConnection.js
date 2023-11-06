@@ -5,7 +5,9 @@ const dbConfig = {
     port: 3306,
     user: 'freedb_insert_name',
     password: 'p!2#M#!jzTzJN&T',
-    database: 'freedb__Database_'
+    database: 'freedb__Database_',
+    multipleStatements: false,
+	namedPlaceholders: true
 };
 
 
