@@ -137,29 +137,29 @@ app.get('/COMP4537/labs/3/getDate/:name', (req, res) => {
   });
 
   app.get(dbLabSixStrings.labSixApiRoute + "definition/:word", async (req, res) => {
-
-    if (!req.params.word) {
       res.status(400);
       const returnJSON = {
         message: dbLabSixStrings.dbLabSixMissingInput + "word",
         entry: {word: ""}
-    }
-    res.send(returnJSON);
-    } else {
-      let result = await db_lab_six_queries.searchWord({word: req.params.word})
-      if (result) {
-          res.status(200).json(result);
-        } else {
-          const returnJson = {
-              error: dbLabSixStrings.dbLabSixMissingEntry,
-              message: `The word ${req.params.word} does not exist in the dictionary`,
-              entry: {
-                  word: req.params.word
-              }
-          }
-          res.status(404).send(returnJson);
+      }
+      res.send(returnJSON);
+  })
+
+  app.get(dbLabSixStrings.labSixApiRoute + "definition/:word", async (req, res) => {
+    let result = await db_lab_six_queries.searchWord({word: req.params.word})
+    if (result) {
+        res.status(200).json(result);
+      } else {
+        const returnJson = {
+            error: dbLabSixStrings.dbLabSixMissingEntry,
+            message: `The word ${req.params.word} does not exist in the dictionary`,
+            entry: {
+                word: req.params.word
+            }
         }
-    }
+        res.status(404).send(returnJson);
+      }
+
   })
 
   app.post(dbLabSixStrings.labSixApiRoute + "definition/", async (req, res) => {
