@@ -39,4 +39,40 @@ async function searchWord(postData) {
 	}
 }
 
-module.exports = {addDefinition, searchWord};
+async function deleteWord(postData) {
+	let deleteWordSql = `
+        DELETE FROM lab6_dictionary 
+        WHERE word = :word;
+	`;
+	
+	try {
+		await database.query(deleteWordSql, postData);
+		return true;
+	}
+	catch(err) {
+		console.log("Error deleting word");
+        console.log(err);
+		return false;
+	}
+}
+
+async function updateWord(postData) {
+	let updateWordSql = `
+    UPDATE lab6_dictionary 
+    SET definition = :defintion 
+    WHERE (word = :word);
+	`;
+	
+	try {
+		await database.query(updateWordSql, postData);
+		return true;
+	}
+	catch(err) {
+		console.log("Error updating word");
+        console.log(err);
+		return false;
+	}
+}
+
+
+module.exports = {addDefinition, searchWord, deleteWord, updateWord};

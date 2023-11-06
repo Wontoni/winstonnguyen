@@ -2,12 +2,13 @@
 async function createTables() {
 	let createTableSQL = `
     CREATE TABLE IF NOT EXISTS lab6_dictionary (
-        word_id INT NOT NULL,
+        word_id INT NOT NULL AUTO INCREMENT,
         word VARCHAR(45) NOT NULL,
         definition VARCHAR(100) NOT NULL,
         word_langauge VARCHAR(45) NOT NULL,
         definition_language VARCHAR(45) NOT NULL,
         PRIMARY KEY (word_id))
+	  ADD UNIQUE INDEX word_UNIQUE (word ASC) VISIBLE;
       ENGINE = InnoDB
       DEFAULT CHARACTER SET = utf8mb4
       COLLATE = utf8mb4_0900_as_ci;

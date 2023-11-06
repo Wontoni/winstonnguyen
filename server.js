@@ -178,6 +178,30 @@ app.get('/COMP4537/labs/3/getDate/:name', (req, res) => {
       res.send(returnJson);
     }
   });
+
+  app.delete(labSixApiRoute + "definition/", async(req, res) => {
+    let result = await db_lab_six_queries.deleteWord({word: req.body.word});
+    if (result) {
+        const returnJson =  {
+            "message": "Entry successfully deleted",
+            "entry": {
+                word: req.body.word
+            },
+            "total": 0 // TODO
+          }
+      res.send(returnJson);
+    } else {
+        const returnJson =  {
+            "error": "Entry Not Found",
+            "message": `The word ${req.body.word} does not exist in the dictionary.`,
+            "entry": {
+                word: req.body.word
+            },
+            "total": 0 // TODO
+          }
+      res.send(returnJson);
+    }
+  });
   
   app.get("*", (req, res) => {
     console.log('URL: ' + req.url);
