@@ -264,7 +264,7 @@ app.get('/COMP4537/labs/3/getDate/:name', (req, res) => {
         definition_language: req.body.def_language
     }
 
-    if(missingParams) {
+    if(missingParams != false) {
         res.status(400);
         const returnJSON = {
             message: dbLabSixStrings.dbLabSixMissingInput + missingParams,
