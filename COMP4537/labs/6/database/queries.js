@@ -59,7 +59,7 @@ async function deleteWord(postData) {
 async function updateWord(postData) {
 	let updateWordSql = `
     UPDATE lab6_dictionary 
-    SET definition = :defintion 
+    SET definition = :definition, word_langauge = :word_language, definition_language = :definition_language 
     WHERE (word = :word);
 	`;
 	
@@ -75,4 +75,22 @@ async function updateWord(postData) {
 }
 
 
-module.exports = {addDefinition, searchWord, deleteWord, updateWord};
+async function getLanguages(postData) {
+	let getLanguagesSql = `
+        SELECT code, name
+        FROM lab6_language;
+	`;
+	
+	try {
+		const results = await database.query(getLanguagesSql, postData);
+		return results[0];
+	}
+	catch(err) {
+		console.log("Error getting languages");
+        console.log(err);
+		return false;
+	}
+}
+
+
+module.exports = {addDefinition, searchWord, deleteWord, updateWord, getLanguages};
